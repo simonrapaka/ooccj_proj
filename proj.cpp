@@ -21,12 +21,12 @@ Snake::Snake()
 	for(int i=0; i<100;i++)
 		s[i] = {0,0,0,0};
 
-	size = 15;
+	size = 16;
 	l=10;
 
 	for(int i=0;i<l;i++)
 	{
-		s[i] = {200,200+(i*size),size,size};
+		s[i] = {208,208+(i*size),size,size};
 	}
 }
 
@@ -35,39 +35,36 @@ void Snake::update(SDL_Renderer *r, int d)
 	int x,y;
 	switch (d)
 	{
-	case 1:
-		x = s[0].x;
-		y = s[0].y;
-		s[0].y -= size;
-		if(s[0].y < 0) s[0].y = SH - size;
-		break;
+		case 1:
+			x = s[0].x;
+			y = s[0].y;
+			s[0].y -= size;
+			if(s[0].y < 0) s[0].y = SH - size;
+			break;
 
-	case 2:
-		x = s[0].x;
-		y = s[0].y;
-		s[0].x += size;
-		if(s[0].x > SW) s[0].x = 0;
-		break;
+		case 2:
+			x = s[0].x;
+			y = s[0].y;
+			s[0].x += size;
+			if(s[0].x > SW) s[0].x = 0;
+			break;
 
-	case 3:
-		x = s[0].x;
-		y = s[0].y;
-		s[0].y += size;
-		if(s[0].y > SH) s[0].y = 0;
-		break;
+		case 3:
+			x = s[0].x;
+			y = s[0].y;
+			s[0].y += size;
+			if(s[0].y > SH) s[0].y = 0;
+			break;
 
-	case 4:
-		x = s[0].x;
-		y = s[0].y;
-		s[0].x -= size;
-		if(s[0].x < 0) s[0].x = SW - size;
-		break;
-	
-	default:
-		break;
+		case 4:
+			x = s[0].x;
+			y = s[0].y;
+			s[0].x -= size;
+			if(s[0].x < 0) s[0].x = SW - size;
+			break;
 	}
 
-	for(int i=1;s[i].h != 0;i++)
+	for(int i=1;i<l;i++)
 	{
 		int xp,yp;
 		xp = s[i].x;
@@ -95,11 +92,7 @@ int main(int argc, char *argv[])
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,SDL_WINDOW_SHOWN);
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED);
 
-	int run = 1,fps = 20,r=0,s=1;
-
-	int size = 64;
-
-	int dir = 1;
+	int run = 1,fps = 20,dir = 1;
 
 	Snake s1;
 
@@ -134,7 +127,7 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(ren,0,0,0,255);
 		SDL_RenderClear(ren);
 
-		SDL_SetRenderDrawColor(ren,255,0,255,255);
+		SDL_SetRenderDrawColor(ren,0x1D,0xC9,0x5C,255);
 
 		s1.update(ren,dir);
 		s1.render(ren);
