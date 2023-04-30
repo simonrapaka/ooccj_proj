@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int SW = 640, SH = 480;
+int SW = 640, SH = 640;
 
 int map[100]=
 {
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
 	int run = 1,fps = 60,r=0,s=1;
 
-	int size = 40;
+	int size = 64;
 
 	SDL_Event e;
 
@@ -55,13 +55,11 @@ int main(int argc, char *argv[])
 
 		for(int i=0;i<mapy;i++)
 			for(int j=0;j<mapx;j++)
-			{
 				if(map[i*mapx + j])
 				{
-					SDL_Rect m = {i*40,j*40,size-1,size-1};
+					SDL_Rect m = {i*size,j*size,size-1,size-1};
 					SDL_RenderFillRect(ren,&m);
 				}
-			}
 
 		int frame = SDL_GetTicks() - start;
 
