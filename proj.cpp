@@ -90,9 +90,7 @@ void Snake::update(int d)
 	}
 
 	if(ffl)
-	{
 		s[l++] = {x,y,size,size};
-	}
 }
 
 void Snake::render(SDL_Renderer *r)
@@ -113,7 +111,7 @@ int main(int argc, char *argv[])
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,SDL_WINDOW_SHOWN);
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED);
 
-	int run = 1,fps = 20,dir = 1;
+	int run = 1,fps = 60,dir = 1,del = 0;
 
 	Snake s1;
 	SDL_Event e;
@@ -143,6 +141,14 @@ int main(int argc, char *argv[])
 			{
 				if(dir!=2) dir = 4;
 			}
+			if(e.type == SDL_MOUSEWHEEL)
+			{
+				if(e.wheel.y < 0)
+					del++;
+				if(e.wheel.y > 0)
+					if(del-1>0)
+						del--;
+			}
 		}
 		SDL_SetRenderDrawColor(ren,0,0,0,255);
 		SDL_RenderClear(ren);
@@ -155,7 +161,7 @@ int main(int argc, char *argv[])
 		int frame = SDL_GetTicks() - start;
 
 		if(frame < 1000/fps)
-			SDL_Delay(1000/fps - frame);
+			SDL_Delay((1000/fps - frame) + del);
 
 		SDL_RenderPresent(ren);
 	}
