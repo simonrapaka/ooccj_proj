@@ -8,11 +8,11 @@ int SW = 640, SH = 640;
 class Snake
 {
 private:
-	SDL_Rect s[100];
+	SDL_Rect s[100],f;
 	int l,size;
 public:
 	Snake();
-	void update(SDL_Renderer *r, int d);
+	void update(int d);
 	void render(SDL_Renderer *r);
 };
 
@@ -22,7 +22,12 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16;
-	l=10;
+	l=3;
+
+	int x = ((rand() % SW)>>4)<<4;
+	int y = ((rand() % SH)>>4)<<4;
+
+	f = {x,y,size,size};
 
 	for(int i=0;i<l;i++)
 	{
@@ -30,7 +35,7 @@ Snake::Snake()
 	}
 }
 
-void Snake::update(SDL_Renderer *r, int d)
+void Snake::update(int d)
 {
 	int x,y;
 	switch (d)
@@ -64,6 +69,15 @@ void Snake::update(SDL_Renderer *r, int d)
 			break;
 	}
 
+	int ffl = 0;
+
+	if(s[0].x == f.x && s[0].y == f.y)
+	{
+		f.x = ((rand() % SW)>>4)<<4;
+		f.y = ((rand() % SH)>>4)<<4;
+		ffl=1;
+	}
+
 	for(int i=1;i<l;i++)
 	{
 		int xp,yp;
@@ -74,11 +88,18 @@ void Snake::update(SDL_Renderer *r, int d)
 		x = xp;
 		y = yp; 
 	}
+
+	if(ffl)
+	{
+		s[l++] = {x,y,size,size};
+	}
 }
 
 void Snake::render(SDL_Renderer *r)
 {
 	SDL_RenderFillRects(r,s,l);
+	SDL_SetRenderDrawColor(r,0x25,0x0B,0x8D,255);
+	SDL_RenderFillRect(r,&f);
 }
 
 int main(int argc, char *argv[])
@@ -95,7 +116,6 @@ int main(int argc, char *argv[])
 	int run = 1,fps = 20,dir = 1;
 
 	Snake s1;
-
 	SDL_Event e;
 
 	while(run)
@@ -129,7 +149,7 @@ int main(int argc, char *argv[])
 
 		SDL_SetRenderDrawColor(ren,0x1D,0xC9,0x5C,255);
 
-		s1.update(ren,dir);
+		s1.update(dir);
 		s1.render(ren);
 
 		int frame = SDL_GetTicks() - start;
