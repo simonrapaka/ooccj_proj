@@ -22,7 +22,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 15;
-	l=3;
+	l=10;
 
 	for(int i=0;i<l;i++)
 	{
@@ -81,8 +81,7 @@ void Snake::update(SDL_Renderer *r, int d)
 
 void Snake::render(SDL_Renderer *r)
 {
-	for(int i=0;i<l;i++)
-		SDL_RenderFillRect(r,&s[i]);
+	SDL_RenderFillRects(r,s,l);
 }
 
 int main(int argc, char *argv[])
