@@ -5,21 +5,85 @@ using namespace std;
 
 int SW = 640, SH = 640;
 
-int map[100]=
+class Snake
 {
-	1,1,1,1,1,1,1,1,1,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,0,0,1,
-	1,1,1,1,1,1,1,1,1,1
+private:
+	SDL_Rect s[100];
+	int l,size;
+public:
+	Snake();
+	void update(SDL_Renderer *r, int d);
+	void render(SDL_Renderer *r);
 };
-int mapx = 10, mapy = 10;
 
+Snake::Snake()
+{
+	for(int i=0; i<100;i++)
+		s[i] = {0,0,0,0};
+
+	size = 15;
+	l=3;
+
+	for(int i=0;i<l;i++)
+	{
+		s[i] = {200,200+(i*size),size,size};
+	}
+}
+
+void Snake::update(SDL_Renderer *r, int d)
+{
+	int x,y;
+	switch (d)
+	{
+	case 1:
+		x = s[0].x;
+		y = s[0].y;
+		s[0].y -= size;
+		if(s[0].y < 0) s[0].y = SH - size;
+		break;
+
+	case 2:
+		x = s[0].x;
+		y = s[0].y;
+		s[0].x += size;
+		if(s[0].x > SW) s[0].x = 0;
+		break;
+
+	case 3:
+		x = s[0].x;
+		y = s[0].y;
+		s[0].y += size;
+		if(s[0].y > SH) s[0].y = 0;
+		break;
+
+	case 4:
+		x = s[0].x;
+		y = s[0].y;
+		s[0].x -= size;
+		if(s[0].x < 0) s[0].x = SW - size;
+		break;
+	
+	default:
+		break;
+	}
+
+	for(int i=1;s[i].h != 0;i++)
+	{
+		int xp,yp;
+		xp = s[i].x;
+		yp = s[i].y;
+		s[i].x = x;
+		s[i].y = y;
+		x = xp;
+		y = yp; 
+	}
+}
+
+void Snake::render(SDL_Renderer *r)
+{
+	for(int i=0;i<l;i++)
+		SDL_RenderFillRect(r,&s[i]);
+}
 
 int main(int argc, char *argv[])
 {
@@ -32,9 +96,13 @@ int main(int argc, char *argv[])
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,SDL_WINDOW_SHOWN);
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED);
 
-	int run = 1,fps = 60,r=0,s=1;
+	int run = 1,fps = 20,r=0,s=1;
 
 	int size = 64;
+
+	int dir = 1;
+
+	Snake s1;
 
 	SDL_Event e;
 
@@ -47,19 +115,30 @@ int main(int argc, char *argv[])
 				run = 0;
 			if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 				run = 0;
+			if(e.key.keysym.scancode == SDL_SCANCODE_W)
+			{
+				if(dir!=3) dir = 1;
+			}
+			if(e.key.keysym.scancode == SDL_SCANCODE_D)
+			{
+				if(dir!=4) dir = 2;
+			}
+			if(e.key.keysym.scancode == SDL_SCANCODE_S)
+			{
+				if(dir!=1) dir = 3;
+			}
+			if(e.key.keysym.scancode == SDL_SCANCODE_A)
+			{
+				if(dir!=2) dir = 4;
+			}
 		}
 		SDL_SetRenderDrawColor(ren,0,0,0,255);
 		SDL_RenderClear(ren);
 
 		SDL_SetRenderDrawColor(ren,255,0,255,255);
 
-		for(int i=0;i<mapy;i++)
-			for(int j=0;j<mapx;j++)
-				if(map[i*mapx + j])
-				{
-					SDL_Rect m = {i*size,j*size,size-1,size-1};
-					SDL_RenderFillRect(ren,&m);
-				}
+		s1.update(ren,dir);
+		s1.render(ren);
 
 		int frame = SDL_GetTicks() - start;
 
