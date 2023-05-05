@@ -115,8 +115,12 @@ int main(int argc, char *argv[])
 
 	int run = 1,fps = 60,dir = 1,del = 0;
 
+	bool p = false;
+
 	Snake s1;
 	SDL_Event e;
+
+	SDL_Rect r = {0,0,SW,SH};
 
 	while(run)
 	{
@@ -127,25 +131,23 @@ int main(int argc, char *argv[])
 				run = 0;
 			if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 				run = 0;
-			if(e.key.keysym.scancode == SDL_SCANCODE_W)
+
+			if(e.type == SDL_KEYDOWN)
 			{
-				if(e.type == SDL_KEYDOWN)
+				if(e.key.keysym.scancode == SDL_SCANCODE_W)
 					if(dir!=3) dir = 1;
-			}
-			if(e.key.keysym.scancode == SDL_SCANCODE_D)
-			{
-				if(e.type == SDL_KEYDOWN)
+				
+				if(e.key.keysym.scancode == SDL_SCANCODE_D)
 					if(dir!=4) dir = 2;
-			}
-			if(e.key.keysym.scancode == SDL_SCANCODE_S)
-			{
-				if(e.type == SDL_KEYDOWN)
+				
+				if(e.key.keysym.scancode == SDL_SCANCODE_S)
 					if(dir!=1) dir = 3;
-			}
-			if(e.key.keysym.scancode == SDL_SCANCODE_A)
-			{
-				if(e.type == SDL_KEYDOWN)
+				
+				if(e.key.keysym.scancode == SDL_SCANCODE_A)	
 					if(dir!=2) dir = 4;
+
+				if(e.key.keysym.scancode == SDL_SCANCODE_SPACE)
+					p = !p;
 			}
 			if(e.type == SDL_MOUSEWHEEL)
 			{
@@ -156,14 +158,22 @@ int main(int argc, char *argv[])
 						del--;
 			}
 		}
-		SDL_SetRenderDrawColor(ren,0,0,0,255);
+		SDL_SetRenderDrawColor(ren,0x98,0x80,0x4F,255);
 		SDL_RenderClear(ren);
 
 		SDL_SetRenderDrawColor(ren,0x1D,0xC9,0x5C,255);
 
 		s1.render(ren);
+		if(p)
+		{
+			SDL_SetRenderDrawBlendMode(ren,SDL_BLENDMODE_BLEND);
+			SDL_SetRenderDrawColor(ren,0,0,0,100);
+			SDL_RenderFillRect(ren,&r);
+		}
+		
 		SDL_RenderPresent(ren);
-		s1.update(dir);
+
+		if(!p) s1.update(dir);
 
 		int frame = SDL_GetTicks() - start;
 
