@@ -26,6 +26,6 @@ Navigate to the folder starting with `i686` if you are on a 32-bit system or go 
 
 Select all the folders and copy them to your compiler directory
 
-All the folders starting with `bin`, `lib`, `include` etc should be highlighted once you have pasted the folders
+All the folders starting with `bin`, `lib`, `include` etc in your compiler directory should be highlighted once you have pasted the folders
 
 You can now start writing code and develop programs using the SDL library
