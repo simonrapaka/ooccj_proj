@@ -14,6 +14,7 @@ public:
 	Snake();
 	void update(int d);
 	void render(SDL_Renderer *r);
+	int score();
 };
 
 Snake::Snake()
@@ -33,6 +34,11 @@ Snake::Snake()
 	{
 		s[i] = {208,208+(i*size),size,size};
 	}
+}
+
+int Snake::score()
+{
+	return l-3;
 }
 
 void Snake::update(int d)
@@ -129,25 +135,26 @@ int main(int argc, char *argv[])
 		{
 			if(e.type == SDL_QUIT)
 				run = 0;
-			if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
-				run = 0;
 
 			if(e.type == SDL_KEYDOWN)
 			{
 				if(e.key.keysym.scancode == SDL_SCANCODE_W)
-					if(dir!=3) dir = 1;
+					if(dir!=3 && !p) dir = 1;
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_D)
-					if(dir!=4) dir = 2;
+					if(dir!=4 && !p) dir = 2;
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_S)
-					if(dir!=1) dir = 3;
+					if(dir!=1 && !p) dir = 3;
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_A)	
-					if(dir!=2) dir = 4;
+					if(dir!=2 && !p) dir = 4;
 
-				if(e.key.keysym.scancode == SDL_SCANCODE_SPACE)
+				if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					p = !p;
+
+				if(e.key.keysym.scancode == SDL_SCANCODE_X)
+					if(p) run = 0;
 			}
 			if(e.type == SDL_MOUSEWHEEL)
 			{
@@ -170,7 +177,7 @@ int main(int argc, char *argv[])
 			SDL_SetRenderDrawColor(ren,0,0,0,100);
 			SDL_RenderFillRect(ren,&r);
 		}
-		
+
 		SDL_RenderPresent(ren);
 
 		if(!p) s1.update(dir);
@@ -183,6 +190,8 @@ int main(int argc, char *argv[])
 
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
+
+	cout << "Score: " << s1.score() << "\n";
 
 	return 0;
 }
