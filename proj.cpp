@@ -4,10 +4,10 @@
 using namespace std;
 
 //For Windowed Operation
-// int SW = 640, SH = 640, w = 4,m = 0;
+int SW = 640, SH = 640, w = 4,m = 0;
 
 //For FullScreen Operation
-int SW = 1280,SH = 720,w = 1,m = 1;
+// int SW = 1280,SH = 720,w = 1,m = 1;
 
 class Snake
 {
