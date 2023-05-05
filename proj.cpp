@@ -149,16 +149,16 @@ int main(int argc, char *argv[])
 			if(e.type == SDL_KEYDOWN)
 			{
 				if(e.key.keysym.scancode == SDL_SCANCODE_W)
-					if(dir!=3 && !p) dir = 1;
+					{if(dir!=3 && !p) dir = 1; break;}
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_D)
-					if(dir!=4 && !p) dir = 0;
+					{if(dir!=4 && !p) dir = 0; break;}
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_S)
-					if(dir!=1 && !p) dir = 3;
+					{if(dir!=1 && !p) dir = 3; break;}
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_A)	
-					if(dir!=0 && !p) dir = 4;
+					{if(dir!=0 && !p) dir = 4; break;}
 
 				if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					p = !p;
