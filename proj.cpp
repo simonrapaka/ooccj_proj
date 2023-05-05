@@ -51,14 +51,14 @@ void Snake::update(int d)
 			x = s[0].x;
 			y = s[0].y;
 			s[0].x += size;
-			if(s[0].x > SW) s[0].x = 0;
+			if(s[0].x + size> SW) s[0].x = 0;
 			break;
 
 		case 3:
 			x = s[0].x;
 			y = s[0].y;
 			s[0].y += size;
-			if(s[0].y > SH) s[0].y = 0;
+			if(s[0].y + size> SH) s[0].y = 0;
 			break;
 
 		case 4:
@@ -98,6 +98,8 @@ void Snake::render(SDL_Renderer *r)
 	SDL_RenderFillRects(r,s,l);
 	SDL_SetRenderDrawColor(r,0x25,0x0B,0x8D,255);
 	SDL_RenderFillRect(r,&f);
+	SDL_SetRenderDrawColor(r,127,0,0,255);
+	SDL_RenderFillRect(r,&s[0]);
 }
 
 int main(int argc, char *argv[])
@@ -127,19 +129,23 @@ int main(int argc, char *argv[])
 				run = 0;
 			if(e.key.keysym.scancode == SDL_SCANCODE_W)
 			{
-				if(dir!=3) dir = 1;
+				if(e.type == SDL_KEYDOWN)
+					if(dir!=3) dir = 1;
 			}
 			if(e.key.keysym.scancode == SDL_SCANCODE_D)
 			{
-				if(dir!=4) dir = 2;
+				if(e.type == SDL_KEYDOWN)
+					if(dir!=4) dir = 2;
 			}
 			if(e.key.keysym.scancode == SDL_SCANCODE_S)
 			{
-				if(dir!=1) dir = 3;
+				if(e.type == SDL_KEYDOWN)
+					if(dir!=1) dir = 3;
 			}
 			if(e.key.keysym.scancode == SDL_SCANCODE_A)
 			{
-				if(dir!=2) dir = 4;
+				if(e.type == SDL_KEYDOWN)
+					if(dir!=2) dir = 4;
 			}
 			if(e.type == SDL_MOUSEWHEEL)
 			{
@@ -155,15 +161,14 @@ int main(int argc, char *argv[])
 
 		SDL_SetRenderDrawColor(ren,0x1D,0xC9,0x5C,255);
 
-		s1.update(dir);
 		s1.render(ren);
+		SDL_RenderPresent(ren);
+		s1.update(dir);
 
 		int frame = SDL_GetTicks() - start;
 
 		if(frame < 1000/fps)
 			SDL_Delay((1000/fps - frame) + del);
-
-		SDL_RenderPresent(ren);
 	}
 
 	SDL_DestroyRenderer(ren);
