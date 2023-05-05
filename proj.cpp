@@ -4,10 +4,10 @@
 using namespace std;
 
 //For Windowed Operation
-int SW = 640, SH = 640, w = 4;
+// int SW = 640, SH = 640, w = 4,m = 0;
 
 //For FullScreen Operation
-//int SW = 848,SH = 477,w = 1;
+int SW = 1280,SH = 720,w = 1,m = 1;
 
 class Snake
 {
@@ -57,7 +57,7 @@ void Snake::update(int d)
 			if(s[0].y < 0) s[0].y = SH - size;
 			break;
 
-		case 2:
+		case 0:
 			x = s[0].x;
 			y = s[0].y;
 			s[0].x += size;
@@ -123,6 +123,12 @@ int main(int argc, char *argv[])
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,w);
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED);
 
+	if(m)
+	{
+		if(SDL_SetRelativeMouseMode(SDL_TRUE) < 0) cout << "Mouse Capture Error\n";
+		else cout << "Mouse Capture OK\n";
+	}
+
 	int run = 1,fps = 60,dir = 1,del = 0;
 
 	bool p = false;
@@ -146,13 +152,13 @@ int main(int argc, char *argv[])
 					if(dir!=3 && !p) dir = 1;
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_D)
-					if(dir!=4 && !p) dir = 2;
+					if(dir!=4 && !p) dir = 0;
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_S)
 					if(dir!=1 && !p) dir = 3;
 				
 				if(e.key.keysym.scancode == SDL_SCANCODE_A)	
-					if(dir!=2 && !p) dir = 4;
+					if(dir!=0 && !p) dir = 4;
 
 				if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					p = !p;
