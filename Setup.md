@@ -28,4 +28,4 @@ Select all the folders and copy them to your compiler directory
 
 All the folders starting with `bin`, `lib`, `include` etc in your compiler directory should be highlighted once you have pasted the folders
 
-You can now start writing code and develop programs using the SDL library
+You can now start writing code and developing programs using the SDL library
