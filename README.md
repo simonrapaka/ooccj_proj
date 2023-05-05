@@ -10,3 +10,5 @@ For setting up your pc read Setup.md
 **Right** : D &emsp;
 
 **Pause**: Esc &emsp; &emsp; **Exit**: Press X while paused
+
+**Scroll Up** : Increase speed &emsp; **Scroll Down** : Decrease speed
