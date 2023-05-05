@@ -3,7 +3,11 @@
 
 using namespace std;
 
-int SW = 640, SH = 640;
+//For Windowed Operation
+int SW = 640, SH = 640, w = 4;
+
+//For FullScreen Operation
+//int SW = 848,SH = 477,w = 1;
 
 class Snake
 {
@@ -116,7 +120,7 @@ int main(int argc, char *argv[])
 	if(SDL_Init(SDL_INIT_VIDEO) < 0) cout << "Video Error\n";
 	else cout << "Video Ok\n";
 
-	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,SDL_WINDOW_SHOWN);
+	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,w);
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED);
 
 	int run = 1,fps = 60,dir = 1,del = 0;
