@@ -148,27 +148,17 @@ int main(int argc, char *argv[])
 
 			if(e.type == SDL_KEYDOWN)
 			{
-				switch (e.key.keysym.scancode)
-				{
-					case SDL_SCANCODE_W:
-						if(dir!=3 && !p) dir = 1;
-						break;
-
-					case SDL_SCANCODE_D:
-						if(dir!=4 && !p) dir = 2;
-						break;
-
-					case SDL_SCANCODE_S:
-						if(dir!=1 && !p) dir = 3;
-						break;
-
-					case SDL_SCANCODE_A:
-						if(dir!=2 && !p) dir = 4;
-						break;
-
-					default:
-						break;
-				}
+				if(e.key.keysym.scancode == SDL_SCANCODE_W)
+					{if(dir!=3 && !p) dir = 1; break;}
+				
+				if(e.key.keysym.scancode == SDL_SCANCODE_D)
+					{if(dir!=4 && !p) dir = 2; break;}
+				
+				if(e.key.keysym.scancode == SDL_SCANCODE_S)
+					{if(dir!=1 && !p) dir = 3; break;}
+				
+				if(e.key.keysym.scancode == SDL_SCANCODE_A)	
+					{if(dir!=2 && !p) dir = 4; break;}
 
 				if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					p = !p;
