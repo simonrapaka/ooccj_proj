@@ -32,7 +32,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16; //sets the size of each cell
-	l=15; //sets the length
+	l=4; //sets the length
 
 	int x = ((rand() % SW)>>4)<<4; //generates a random location for the food
 	int y = ((rand() % SH)>>4)<<4;
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
 	help[4] = "S: Down";
 	help[5] = "D: Left";
 	help[6] = "Press X to Exit";
-	help[7] = "Press Enter to Continue";
+	help[7] = "Press Enter to Restart";
 
 	string go[3]; //Text to display in game over state
 
