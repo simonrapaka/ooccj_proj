@@ -1,5 +1,6 @@
 #include<iostream>
 #include<SDL2\SDL.h>
+#include<SDL2\SDL_ttf.h>
 
 using namespace std;
 
@@ -60,21 +61,21 @@ void Snake::update(int d)
 			x = s[0].x; // stores the location of head before updating it
 			y = s[0].y;
 			s[0].y -= size;
-			if(s[0].y < 0) s[0].y = SH - size;
+			if(s[0].y < 2*size) s[0].y = SH - size; //if head's y corrdinate is above the top of the window, changes its location to bottom
 			break;
 
 		case 2:
 			x = s[0].x;
 			y = s[0].y;
 			s[0].x += size;
-			if(s[0].x + size> SW) s[0].x = 0;
+			if(s[0].x + size> SW) s[0].x = 0; //if head's x coordinate is grater than the width of the window, changes it to zero
 			break;
 
 		case 3:
 			x = s[0].x;
 			y = s[0].y;
 			s[0].y += size;
-			if(s[0].y + size> SH) s[0].y = 0;
+			if(s[0].y + size> SH) s[0].y = 2*size;
 			break;
 
 		case 4:
@@ -111,6 +112,8 @@ void Snake::update(int d)
 
 		ffl=1; //Set food flag to 1
 	}
+
+	if(f.y < 2*size) f.y = 2*size;
 
 	//goes through all the active rectangles of the snake and moves them to their predecessors previous location
 	for(int i=1;i<l;i++)
@@ -157,7 +160,7 @@ int main(int argc, char *argv[])
 	SDL_Renderer *ren = NULL;
 	SDL_Surface *sur = NULL;
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0) cout << "Video Error\n";
+	if(SDL_Init(SDL_INIT_VIDEO) < 0 || TTF_Init() < 0) cout << "Video Error\n";
 	else cout << "Video Ok\n";
 
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,w); //Create Window with certain parameters
@@ -176,7 +179,17 @@ int main(int argc, char *argv[])
 	Snake s1; //Create Snake object
 	SDL_Event e; //Create an event to check inputs
 
+	int scw = 150, sch = 30;
 	SDL_Rect r = {0,0,SW,SH}; //Screen size rectangle for dimming
+	SDL_Rect score = {SW/2-scw/2,4,scw,sch}; //Score rectangle
+	SDL_Rect bar = {0,0,SW,32}; //Top bar
+
+	char sc[15];
+
+	TTF_Font *sco =  TTF_OpenFont("Minecrafter.Reg.ttf",14);
+	SDL_Color scr = {80,80,80};
+	SDL_Surface *scre;
+	SDL_Texture *scoret;
 
 	while(run)
 	{
@@ -222,6 +235,16 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(ren,0x1D,0xC9,0x5C,255); //Set color to a light green
 
 		s1.render(ren); //Render snake, snake head and food
+
+		sprintf(sc,"Score: %d", s1.score());
+
+		scre = TTF_RenderText_Solid(sco,sc,scr);
+		scoret = SDL_CreateTextureFromSurface(ren,scre);
+
+		SDL_SetRenderDrawColor(ren,0,127,0,255);
+		SDL_RenderFillRect(ren,&bar);
+
+		SDL_RenderCopy(ren,scoret,NULL,&score);
 
 		if(p) //if paused dim the screen
 		{
