@@ -1,4 +1,6 @@
 #include<iostream>
+#include<fstream>
+#include<string>
 #include<SDL2\SDL.h>
 #include<SDL2\SDL_ttf.h> //for text rendering
 
@@ -11,6 +13,29 @@ int SW = 640, SH = 640, w = 4,m = 0;
 
 //For FullScreen Operation
 // int SW = 1280,SH = 720,w = 1,m = 1;
+
+class Lead
+{
+	private:
+	char n[20];
+	int sr,sp;
+	public:
+	Lead()
+	{
+		sprintf(n," ");
+		sr = sp = 0;
+	}
+	Lead(char s[],int a, int b)
+	{
+		strcpy(n,s);
+		sr = a;
+		sp = b;
+	}
+	void print()
+	{
+		cout << n << " Score: " << sr << " Speed: " << sp << "\n"; 
+	}
+};
 
 class Snake
 {
@@ -172,6 +197,32 @@ int main(int argc, char *argv[])
 	if(SDL_Init(SDL_INIT_VIDEO) < 0 || TTF_Init() < 0) cout << "Video Error\n";
 	else cout << "Video Ok\n";
 
+	Lead l[10];
+
+	ifstream ldb;
+	ofstream oldb;
+
+	ldb.open("lead.ldb");
+
+	if(ldb)
+	{
+		for(int i=0;i<10;i++)
+			ldb.read((char*)&l[i],sizeof(Lead));
+		ldb.close();
+	}
+	else
+	{
+		ldb.close();
+		oldb.open("lead.ldb");
+		for(int i=0;i<10;i++)
+			oldb.write((char*)&l[i],sizeof(Lead));
+		oldb.close();
+		ldb.open("lead.ldb");
+		for(int i=0;i<10;i++)
+			ldb.read((char*)&l[i],sizeof(Lead));
+		ldb.close();
+	}
+
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,w); //Create Window with certain parameters
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED); //Create Renderer that points to the previously created window
 
@@ -187,7 +238,7 @@ int main(int argc, char *argv[])
 	SDL_Rect r = {0,32,SW,SH-32}; //Screen size rectangle for dimming
 	SDL_Rect score = {5,4,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
-	SDL_Rect pause = {SW/2-pw/2,(int)(0.2 * SH),pw,ph}; //Pause text rectangle
+	SDL_Rect pause = {SW/2-pw/2,(int)(0.25 * SH),pw,ph}; //Pause text rectangle
 	SDL_Rect speed = {SW-spw-10,4,spw,sph};
 
 	TTF_Font *font =  TTF_OpenFont("Minecrafter.Reg.ttf",14); //Load Font
@@ -215,10 +266,8 @@ int main(int argc, char *argv[])
 	ht[3] = {SW/2-40,ht[2].y + 30,80,30};
 	ht[4] = {SW/2-45,ht[3].y + 30,90,30};
 	ht[5] = {SW/2-40,ht[4].y + 30,80,30};
-	ht[6] = {SW/2-150,ht[5].y + 30,300,30};
-	ht[7] = {SW/2-160,ht[6].y + 30,360,30};
-	ht[8] = {SW/2-100,ht[7].y + 70,200,30};
-	ht[9] = {SW/2-150,ht[8].y + 40,300,30};
+	ht[6] = {SW/2-100,ht[5].y + 70,200,30};
+	ht[7] = {SW/2-150,ht[6].y + 40,300,30};
 
 	string help[10];//Pause Screen Text
 
@@ -228,10 +277,8 @@ int main(int argc, char *argv[])
 	help[3] = "A: Right";
 	help[4] = "S: Down";
 	help[5] = "D: Left";
-	help[6] = "Scroll Up: Increase Speed";
-	help[7] = "Scroll Down: Decrease Speed";
-	help[8] = "Press X to Exit";
-	help[9] = "Press Enter to Restart";
+	help[6] = "Press X to Exit";
+	help[7] = "Press Enter to Restart";
 
 	string go[3]; //Text to display in game over state
 
@@ -280,7 +327,8 @@ int main(int argc, char *argv[])
 						{if(dir!=2 && !p) dir = 4; break;}
 
 					if(e.key.keysym.scancode == SDL_SCANCODE_ESCAPE) //if escape is pressed while running, set pause flag to true, if pressed while paused, set to false
-						p = !p;
+						if(!fail)
+							p = !p;
 
 					if(e.key.keysym.scancode == SDL_SCANCODE_X) //if x is pressed while paused set run flag to zero exiting the game
 						if(p || fail) run = 0;
@@ -331,7 +379,7 @@ int main(int argc, char *argv[])
 				SDL_RenderFillRect(ren,&r);
 
 				s1.render(ren,pfont,&pcol,surf,text,&pause,&p,pz);
-				for(int i=0;i<9;i++)
+				for(int i=0;i<7;i++)
 					s1.render(ren,hfont,&pcol,surf,text,&ht[i],&p,help[i].c_str());
 			}
 
@@ -354,7 +402,7 @@ int main(int argc, char *argv[])
 
 				s1.render(ren,hfont,&gocol,surf,text,&go2[2],&p,gosc); //Render Final Score
 
-				for(int i=8;i<10;i++) // Render the keypress prompts
+				for(int i=6;i<8;i++) // Render the keypress prompts
 					s1.render(ren,hfont,&gocol,surf,text,&ht[i],&p,help[i].c_str());
 			}
 
