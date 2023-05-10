@@ -197,16 +197,18 @@ int main(int argc, char *argv[])
 	Snake s1; //Create Snake object
 	SDL_Event e; //Create an event to check inputs
 
-	int scw = 150, sch = 30;
+	int scw = 150, sch = 30; //Score rectangle widht and height
+	int pw = 200, ph = 80;
 	SDL_Rect r = {0,32,SW,SH-32}; //Screen size rectangle for dimming
 	SDL_Rect score = {SW/2-scw/2,4,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
+	SDL_Rect pause = {SW/2-pw/2,(int)(0.33 * SH),pw,ph};
 
-	TTF_Font *sco =  TTF_OpenFont("Minecrafter.Reg.ttf",14); //Load Font
-	if(sco==NULL) {cout << "Font not found\n"; run = 0;} //Check if font is loaded or not
-	SDL_Color scr = {80,80,80}; //Font color
-	SDL_Surface *scre; //Surface for the font to load to
-	SDL_Texture *scoret; //Texture for the previously created surface to use as base
+	TTF_Font *font =  TTF_OpenFont("Minecrafter.Reg.ttf",14); //Load Font
+	if(font==NULL) {cout << "Font not found\n"; run = 0;} //Check if font is loaded or not
+	SDL_Color col = {80,80,80}; //Font color
+	SDL_Surface *surf; //Surface for the font to load to
+	SDL_Texture *text; //Texture for the previously created surface to use as base
 
 	//Note: SDL is weird and doesn't allow you to directly load a font into a texture 
 
@@ -255,13 +257,15 @@ int main(int argc, char *argv[])
 
 		s1.render(ren); //Render snake, snake head and food
 
-		s1.render(ren,sco,&scr,scre,scoret,&score,&bar,&p);
+		s1.render(ren,font,&col,surf,text,&score,&bar,&p);
 
 		if(p) //if paused dim the screen
 		{
 			SDL_SetRenderDrawBlendMode(ren,SDL_BLENDMODE_BLEND);
 			SDL_SetRenderDrawColor(ren,0,0,0,100);
 			SDL_RenderFillRect(ren,&r);
+
+			s1.render(ren,font,&col,surf,text,&pause,&bar,&p);
 		}
 
 		if(fail)
@@ -292,6 +296,8 @@ int main(int argc, char *argv[])
 			SDL_Delay((1000/fps - frame) + del);
 	}
 
+	SDL_DestroyTexture(text);
+	SDL_FreeSurface(surf);
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
 
