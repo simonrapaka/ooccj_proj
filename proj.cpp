@@ -7,10 +7,10 @@ using namespace std;
 int fail=0;// Fail flag or game over flag
 
 //For Windowed Operation
-// int SW = 640, SH = 640, w = 4,m = 0;
+int SW = 640, SH = 640, w = 4,m = 0;
 
 //For FullScreen Operation
-int SW = 1280,SH = 720,w = 1,m = 1;
+// int SW = 1280,SH = 720,w = 1,m = 1;
 
 class Snake
 {
@@ -245,11 +245,11 @@ int main(int argc, char *argv[])
 
 	SDL_Color gocol = {200,200,200};
 
-	int runmain=1; //main run flag
+	int runmain=1,del=0; //main run flag
 
 	while(runmain)
 	{
-		int run = 1,fps = 60,dir = 1,del=0; // initialize with direction up and 0ms delay
+		int run = 1,fps = 60,dir = 1; // initialize with direction up and 0ms delay
 		int cont = 0;//continue flag
 		bool p = false; //pause flag set to false
 
