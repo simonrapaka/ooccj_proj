@@ -3,6 +3,8 @@
 
 using namespace std;
 
+int fail=0;
+
 //For Windowed Operation
 int SW = 640, SH = 640, w = 4,m = 0;
 
@@ -18,6 +20,7 @@ public:
 	Snake();
 	void update(int d);
 	void render(SDL_Renderer *r);
+	void renderf(SDL_Renderer *r);
 	int score();
 };
 
@@ -27,7 +30,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16;
-	l=3;
+	l=11;
 
 	int x = ((rand() % SW)>>4)<<4;
 	int y = ((rand() % SH)>>4)<<4;
@@ -85,6 +88,19 @@ void Snake::update(int d)
 	{
 		f.x = ((rand() % SW)>>4)<<4;
 		f.y = ((rand() % SH)>>4)<<4;
+		
+		int c=0;
+		while(true)
+		{
+			for(int i=0;i<l;i++)
+			{
+				if(f.x == s[i].x && f.y == s[i].y)
+					c=1;
+			}
+			if(c) continue;
+			else break;
+		}
+
 		ffl=1;
 	}
 
@@ -99,6 +115,12 @@ void Snake::update(int d)
 		y = yp; 
 	}
 
+	for(int i=1;i<l;i++)
+	{
+		if(s[0].x == s[i].x && s[0].y == s[i].y)
+			fail=1;
+	}
+
 	if(ffl)
 		s[l++] = {x,y,size,size};
 }
@@ -110,6 +132,12 @@ void Snake::render(SDL_Renderer *r)
 	SDL_RenderFillRect(r,&f);
 	SDL_SetRenderDrawColor(r,127,0,0,255);
 	SDL_RenderFillRect(r,&s[0]);
+}
+
+void Snake::renderf(SDL_Renderer *r)
+{
+	SDL_SetRenderDrawColor(r,127,0,0,255);
+	SDL_RenderFillRects(r,s,l);
 }
 
 int main(int argc, char *argv[])
@@ -129,7 +157,7 @@ int main(int argc, char *argv[])
 		else cout << "Mouse Capture OK\n";
 	}
 
-	int run = 1,fps = 60,dir = 1,del = 0;
+	int run = 1,fps = 60,dir = 1,del=0;
 
 	bool p = false;
 
@@ -166,14 +194,16 @@ int main(int argc, char *argv[])
 				if(e.key.keysym.scancode == SDL_SCANCODE_X)
 					if(p) run = 0;
 			}
+
 			if(e.type == SDL_MOUSEWHEEL)
-			{
-				if(e.wheel.y < 0)
-					del++;
-				if(e.wheel.y > 0)
-					if(del-1>0)
-						del--;
-			}
+				{
+					if(e.wheel.y < 0)
+						del++;
+					if(e.wheel.y > 0)
+						if(del-1 >= 0)
+							del--;
+				}
+			
 		}
 		SDL_SetRenderDrawColor(ren,0x98,0x80,0x4F,255);
 		SDL_RenderClear(ren);
@@ -190,7 +220,20 @@ int main(int argc, char *argv[])
 
 		SDL_RenderPresent(ren);
 
-		if(!p) s1.update(dir);
+		if(!p && !fail) s1.update(dir);
+
+		if(fail)
+		{
+			SDL_SetRenderDrawColor(ren,0x98,0x80,0x4F,255);
+			SDL_RenderClear(ren);
+			s1.renderf(ren);
+			SDL_SetRenderDrawBlendMode(ren,SDL_BLENDMODE_BLEND);
+			SDL_SetRenderDrawColor(ren,120,0,0,100);
+			SDL_RenderFillRect(ren,&r);
+			SDL_RenderPresent(ren);
+			SDL_Delay(1000);
+			break;
+		}
 
 		int frame = SDL_GetTicks() - start;
 
