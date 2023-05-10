@@ -4,7 +4,7 @@ For compiling on windows systems
 
 For setting up your pc with SDL read Setup.md
 
-or download the [windows executable](https://drive.google.com/drive/folders/1U4_VEkGnOvedaCI4bYwZSCqEnSOuXhkc?usp=sharing)
+or download the [windows executable](https://drive.google.com/drive/folders/1U4_VEkGnOvedaCI4bYwZSCqEnSOuXhkc?usp=sharing) &emsp; Last updated 11/05/2023
 
 Fonts Used:
 [Minecrafter.Reg](https://www.dafont.com/minecrafter.font) &emsp; [PixeloidSans](https://www.fontspace.com/pixeloid-font-f69232)
