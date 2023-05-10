@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
 					if(e.key.keysym.scancode == SDL_SCANCODE_X) //if x is pressed while paused set run flag to zero exiting the game
 						if(p || fail) run = 0;
 
-					if(e.key.keysym.scancode == SDL_SCANCODE_RETURN)
+					if(e.key.keysym.scancode == SDL_SCANCODE_RETURN)// If enter is pressed during fail(game over) state, set cont to 1
 						if(fail) {fail=0;cont=1;}
 				}
 				
