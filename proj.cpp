@@ -1,6 +1,6 @@
 #include<iostream>
 #include<SDL2\SDL.h>
-#include<SDL2\SDL_ttf.h>
+#include<SDL2\SDL_ttf.h> //for text rendering
 
 using namespace std;
 
@@ -21,6 +21,7 @@ public:
 	Snake();
 	void update(int d);
 	void render(SDL_Renderer *r);
+	void render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar);
 	void renderf(SDL_Renderer *r);
 	int score();
 };
@@ -131,7 +132,7 @@ void Snake::update(int d)
 	for(int i=1;i<l;i++)
 	{
 		if(s[0].x == s[i].x && s[0].y == s[i].y)
-			fail=1;
+			fail=1;// Set fail flag to 1
 	}
 
 	//if a food rectangle is eaten, increases the snake length by 1
@@ -146,6 +147,21 @@ void Snake::render(SDL_Renderer *r)
 	SDL_RenderFillRect(r,&f); //render food
 	SDL_SetRenderDrawColor(r,127,0,0,255);
 	SDL_RenderFillRect(r,&s[0]); //render head of snake
+}
+
+void Snake::render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar)
+{
+	char sc[15];
+
+	sprintf(sc,"Score: %d", l-3);
+
+	surf = TTF_RenderText_Solid(font,sc,*col);
+	text = SDL_CreateTextureFromSurface(r,surf);
+
+	SDL_SetRenderDrawColor(r,0,127,0,255);
+	SDL_RenderFillRect(r,bar);
+
+	SDL_RenderCopy(r,text,NULL,score);
 }
 
 void Snake::renderf(SDL_Renderer *r)
@@ -183,8 +199,6 @@ int main(int argc, char *argv[])
 	SDL_Rect r = {0,0,SW,SH}; //Screen size rectangle for dimming
 	SDL_Rect score = {SW/2-scw/2,4,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
-
-	char sc[15];
 
 	TTF_Font *sco =  TTF_OpenFont("Minecrafter.Reg.ttf",14);
 	SDL_Color scr = {80,80,80};
@@ -236,15 +250,7 @@ int main(int argc, char *argv[])
 
 		s1.render(ren); //Render snake, snake head and food
 
-		sprintf(sc,"Score: %d", s1.score());
-
-		scre = TTF_RenderText_Solid(sco,sc,scr);
-		scoret = SDL_CreateTextureFromSurface(ren,scre);
-
-		SDL_SetRenderDrawColor(ren,0,127,0,255);
-		SDL_RenderFillRect(ren,&bar);
-
-		SDL_RenderCopy(ren,scoret,NULL,&score);
+		s1.render(ren,sco,&scr,scre,scoret,&score,&bar);
 
 		if(p) //if paused dim the screen
 		{
