@@ -370,10 +370,10 @@ int main(int argc, char *argv[])
 		if(cont) continue; // if cont is 1 skip the next line and start again
 		if(!run) break; //if run is 0 break out of the loop
 	}
-	SDL_DestroyTexture(text);
-	SDL_FreeSurface(surf);
-	SDL_DestroyRenderer(ren);
-	SDL_DestroyWindow(win);
+	SDL_DestroyTexture(text);//Deallocate texture memory
+	SDL_FreeSurface(surf); //Deallocate surface memory
+	SDL_DestroyRenderer(ren); //Stop Renderer
+	SDL_DestroyWindow(win); //Clos Window
 
 	return 0;
 }
