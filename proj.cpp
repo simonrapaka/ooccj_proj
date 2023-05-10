@@ -48,7 +48,7 @@ Snake::Snake()
 //returns the score
 int Snake::score()
 {
-	return l-3;
+	return l-4;
 }
 
 
