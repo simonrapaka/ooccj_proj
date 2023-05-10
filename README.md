@@ -3,6 +3,11 @@ For compiling on windows systems
 `g++ proj.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf`
 
 For setting up your pc read Setup.md
+
+Fonts Used:
+[Minecrafter.Reg](https://www.dafont.com/minecrafter.font) &emsp; [PixeloidSans](https://www.fontspace.com/pixeloid-font-f69232)
+
+
 ### Controls :
 **Up** : W &emsp;
 **Left** : A &emsp;
