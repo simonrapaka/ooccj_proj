@@ -189,11 +189,13 @@ int main(int argc, char *argv[])
 	SDL_Event e; //Create an event to check inputs
 
 	int scw = 150, sch = 30; //Score rectangle widht and height
-	int pw = 300, ph = 80;
+	int pw = 300, ph = 80; //Pause text rectangle width and height
+	int spw = 190, sph = 30;
 	SDL_Rect r = {0,32,SW,SH-32}; //Screen size rectangle for dimming
-	SDL_Rect score = {SW/2-scw/2,4,scw,sch}, score2 = {320,320,scw,sch}; //Score rectangle
+	SDL_Rect score = {5,4,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
-	SDL_Rect pause = {SW/2-pw/2,(int)(0.33 * SH),pw,ph};
+	SDL_Rect pause = {SW/2-pw/2,(int)(0.33 * SH),pw,ph}; //Pause text rectangle
+	SDL_Rect speed = {SW-spw-10,4,spw,sph};
 
 	TTF_Font *font =  TTF_OpenFont("Minecrafter.Reg.ttf",14); //Load Font
 	if(font==NULL) {cout << "Font not found\n"; run = 0;} //Check if font is loaded or not
@@ -241,10 +243,11 @@ int main(int argc, char *argv[])
 			if(e.type == SDL_MOUSEWHEEL)
 			{
 				if(e.wheel.y < 0) //if scroll wheel is scrolled down increase the delay after rendering each frame slowin down the game
-					del+=5;
+					if(del+2<=200)
+						del+=2;
 				if(e.wheel.y > 0) //if scroll wheel is scrolled up decrease the delay, speeding up the game
-					if(del-5 >= 0)
-						del-=5;
+					if(del-2 >= 0)
+						del-=2;
 			}
 		}
 		SDL_SetRenderDrawColor(ren,0x98,0x80,0x4F,255); //Render Background
@@ -262,6 +265,12 @@ int main(int argc, char *argv[])
 		sprintf(sc,"Score  %d", s1.score());
 
 		s1.render(ren,font,&scol,surf,text,&score,&p,sc); // Render Score Text
+
+		char sp[20];
+
+		sprintf(sp,"Speed  %d",((del-200)/2)*(-1));
+
+		s1.render(ren,font,&scol,surf,text,&speed,&p,sp);
 
 		if(p) //if paused dim the screen
 		{
