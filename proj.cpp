@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 	SDL_Surface *scre; //Surface for the font to load to
 	SDL_Texture *scoret; //Texture for the previously created surface to use as base
 
-	//Note: SDL is weird and doesn't allow your to directly load a font into a texture 
+	//Note: SDL is weird and doesn't allow you to directly load a font into a texture 
 
 	while(run)
 	{
@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
 
 		if(fail)
 		{
-			//Render Snake
+			//Render Snake in red
 			s1.renderf(ren);
 
 			//Render a red overlay on the screen
