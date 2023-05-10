@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 
 	char pz[] = "PAUSED";
 
-	SDL_Rect ht[8]; //Locations for the pause screen text
+	SDL_Rect ht[8]; //Locations and sizes for the pause screen text rectangles
 
 	ht[0] = {SW/2-130,pause.y + 100,260,30};
 	ht[1] = {SW/2-50,ht[0].y + 80,100,30};
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
 	ht[6] = {SW/2-100,ht[5].y + 70,200,30};
 	ht[7] = {SW/2-150,ht[6].y + 40,300,30};
 
-	string help[8];
+	string help[8];//Pause Screen Text
 
 	help[0] = "Press Esc to resume";
 	help[1] = "Controls";
@@ -229,11 +229,11 @@ int main(int argc, char *argv[])
 	help[6] = "Press X to Exit";
 	help[7] = "Press Enter to Continue";
 
-	string go[3];
+	string go[3]; //Text to display in game over state
 
 	go[0] = "Game"; go[1] = "Over";
 
-	SDL_Rect go2[3];
+	SDL_Rect go2[3]; // Locations and size of game over text
 
 	go2[0] = {SW/2-140,pause.y + 100,280,80};
 	go2[1] = {SW/2-120,go2[0].y + 100,240,80};
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
 
 	SDL_Color gocol = {200,200,200};
 
-	int runmain=1;
+	int runmain=1; //main run flag
 
 	while(runmain)
 	{
@@ -295,8 +295,9 @@ int main(int argc, char *argv[])
 							del-=2;
 				}
 			}
-			if(!run) break;
-			if(cont) {run=0;continue;}
+			if(!run) break;//break out of the inner loop
+			if(cont) {run=0;continue;}// go to the end of the inner loop if cont is 1
+
 			SDL_SetRenderDrawColor(ren,0x98,0x80,0x4F,255); //Render Background
 			SDL_RenderClear(ren);
 
