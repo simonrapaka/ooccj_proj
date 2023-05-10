@@ -18,13 +18,15 @@ Copyright (C) 2020 Free Software Foundation, Inc` should appear.
 
 # SDL Setup
 
-Download the **SDL Developer Package** from the [SDL Releases](https://github.com/libsdl-org/SDL/releases/latest) page. It's name should start with `SDL-devel`
+Download the **SDL Developer Package** from the [SDL Releases](https://github.com/libsdl-org/SDL/releases/latest) page and the **SDL TTF Package** from its [releases](https://github.com/libsdl-org/SDL_ttf/releases) page. Both names should start with `SDL-devel`
 
 Unzip it after downloading and open the `SDL2` folder
 
 Navigate to the folder starting with `i686` if you are on a 32-bit system or go to the folder starting with `x86_64` if you're on a 64 bit system
 
 Select all the folders and copy them to your compiler directory
+
+Do the above for both packages
 
 All the folders starting with `bin`, `lib`, `include` etc in your compiler directory should be highlighted once you have pasted the folders
 
