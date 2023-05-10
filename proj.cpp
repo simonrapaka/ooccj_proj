@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
 
 	TTF_Font *sco =  TTF_OpenFont("Minecrafter.Reg.ttf",14);
-	if(sco==NULL) {cout << "Font not loaded"; run = 0;} 
+	if(sco==NULL) {cout << "Font not found\n"; run = 0;} 
 	SDL_Color scr = {80,80,80};
 	SDL_Surface *scre;
 	SDL_Texture *scoret;
