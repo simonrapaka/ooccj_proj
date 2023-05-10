@@ -253,16 +253,8 @@ int main(int argc, char *argv[])
 			SDL_RenderFillRect(ren,&r);
 		}
 
-		SDL_RenderPresent(ren); //Actual point in the program where the screen is updated
-
-		if(!p && !fail) s1.update(dir); //update the snake and food location if game isn't paused and isn't in a fail state
-
 		if(fail)
 		{
-			//Render Background
-			SDL_SetRenderDrawColor(ren,0x98,0x80,0x4F,255); 
-			SDL_RenderClear(ren);
-
 			//Render Snake
 			s1.renderf(ren);
 
@@ -270,11 +262,15 @@ int main(int argc, char *argv[])
 			SDL_SetRenderDrawBlendMode(ren,SDL_BLENDMODE_BLEND); 
 			SDL_SetRenderDrawColor(ren,120,0,0,100);
 			SDL_RenderFillRect(ren,&r);
+		}
 
-			//Update the screen
-			SDL_RenderPresent(ren);
+		SDL_RenderPresent(ren); //Actual point in the program where the screen is updated
 
-			//Wait for 1 second and exit the game
+		if(!p && !fail) s1.update(dir); //update the snake and food location if game isn't paused and isn't in a fail state
+
+		if(fail)
+		{
+			//Wait for 1 second(1000ms) and exit the game
 			SDL_Delay(1000);
 			break;
 		}
