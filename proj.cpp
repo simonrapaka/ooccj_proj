@@ -21,7 +21,7 @@ public:
 	Snake();
 	void update(int d);
 	void render(SDL_Renderer *r);
-	void render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar);
+	void render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar, bool *p);
 	void renderf(SDL_Renderer *r);
 	int score();
 };
@@ -32,7 +32,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16; //sets the size of each cell
-	l=3; //sets the length
+	l=11; //sets the length
 
 	int x = ((rand() % SW)>>4)<<4; //generates a random location for the food
 	int y = ((rand() % SH)>>4)<<4;
@@ -149,11 +149,13 @@ void Snake::render(SDL_Renderer *r)
 	SDL_RenderFillRect(r,&s[0]); //render head of snake
 }
 
-void Snake::render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar)
+void Snake::render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar, bool *p)
 {
 	char sc[15];
 
 	sprintf(sc,"Score: %d", l-3);
+
+	if(*p) sprintf(sc,"PAUSED");
 
 	surf = TTF_RenderText_Solid(font,sc,*col);
 	text = SDL_CreateTextureFromSurface(r,surf);
@@ -196,7 +198,7 @@ int main(int argc, char *argv[])
 	SDL_Event e; //Create an event to check inputs
 
 	int scw = 150, sch = 30;
-	SDL_Rect r = {0,0,SW,SH}; //Screen size rectangle for dimming
+	SDL_Rect r = {0,32,SW,SH-32}; //Screen size rectangle for dimming
 	SDL_Rect score = {SW/2-scw/2,4,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
 
@@ -251,7 +253,7 @@ int main(int argc, char *argv[])
 
 		s1.render(ren); //Render snake, snake head and food
 
-		s1.render(ren,sco,&scr,scre,scoret,&score,&bar);
+		s1.render(ren,sco,&scr,scre,scoret,&score,&bar,&p);
 
 		if(p) //if paused dim the screen
 		{
@@ -273,14 +275,14 @@ int main(int argc, char *argv[])
 
 		SDL_RenderPresent(ren); //Actual point in the program where the screen is updated
 
-		if(!p && !fail) s1.update(dir); //update the snake and food location if game isn't paused and isn't in a fail state
-
 		if(fail)
 		{
 			//Wait for 1 second(1000ms) and exit the game
 			SDL_Delay(1000);
 			break;
 		}
+
+		if(!p && !fail) s1.update(dir); //update the snake and food location if game isn't paused and isn't in a fail state
 
 		int frame = SDL_GetTicks() - start;
 
