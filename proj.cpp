@@ -341,16 +341,16 @@ int main(int argc, char *argv[])
 				SDL_SetRenderDrawColor(ren,120,0,0,100);
 				SDL_RenderFillRect(ren,&r);
 
-				for(int i=0;i<2;i++)
+				for(int i=0;i<2;i++) // Render Game Over Text
 					s1.render(ren,pfont,&gocol,surf,text,&go2[i],&p,go[i].c_str());
 
 				char gosc[20];
 
 				sprintf(gosc,"Final Score: %d", s1.score());
 
-				s1.render(ren,hfont,&gocol,surf,text,&go2[2],&p,gosc);
+				s1.render(ren,hfont,&gocol,surf,text,&go2[2],&p,gosc); //Render Final Score
 
-				for(int i=6;i<8;i++)
+				for(int i=6;i<8;i++) // Render the keypress prompts
 					s1.render(ren,hfont,&gocol,surf,text,&ht[i],&p,help[i].c_str());
 			}
 
