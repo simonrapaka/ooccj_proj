@@ -32,7 +32,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16; //sets the size of each cell
-	l=4; //sets the length
+	l=15; //sets the length
 
 	int x = ((rand() % SW)>>4)<<4; //generates a random location for the food
 	int y = ((rand() % SH)>>4)<<4;
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 	SDL_Rect r = {0,32,SW,SH-32}; //Screen size rectangle for dimming
 	SDL_Rect score = {5,4,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
-	SDL_Rect pause = {SW/2-pw/2,(int)(0.33 * SH),pw,ph}; //Pause text rectangle
+	SDL_Rect pause = {SW/2-pw/2,(int)(0.2 * SH),pw,ph}; //Pause text rectangle
 	SDL_Rect speed = {SW-spw-10,4,spw,sph};
 
 	TTF_Font *font =  TTF_OpenFont("Minecrafter.Reg.ttf",14); //Load Font
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 
 	char pz[] = "PAUSED";
 
-	SDL_Rect ht[8]; //Locations and sizes for the pause screen text rectangles
+	SDL_Rect ht[10]; //Locations and sizes for the pause screen text rectangles
 
 	ht[0] = {SW/2-130,pause.y + 100,260,30};
 	ht[1] = {SW/2-50,ht[0].y + 80,100,30};
@@ -215,10 +215,12 @@ int main(int argc, char *argv[])
 	ht[3] = {SW/2-40,ht[2].y + 30,80,30};
 	ht[4] = {SW/2-45,ht[3].y + 30,90,30};
 	ht[5] = {SW/2-40,ht[4].y + 30,80,30};
-	ht[6] = {SW/2-100,ht[5].y + 70,200,30};
-	ht[7] = {SW/2-150,ht[6].y + 40,300,30};
+	ht[6] = {SW/2-150,ht[5].y + 30,300,30};
+	ht[7] = {SW/2-160,ht[6].y + 30,360,30};
+	ht[8] = {SW/2-100,ht[7].y + 70,200,30};
+	ht[9] = {SW/2-150,ht[8].y + 40,300,30};
 
-	string help[8];//Pause Screen Text
+	string help[10];//Pause Screen Text
 
 	help[0] = "Press Esc to resume";
 	help[1] = "Controls";
@@ -226,8 +228,10 @@ int main(int argc, char *argv[])
 	help[3] = "A: Right";
 	help[4] = "S: Down";
 	help[5] = "D: Left";
-	help[6] = "Press X to Exit";
-	help[7] = "Press Enter to Restart";
+	help[6] = "Scroll Up: Increase Speed";
+	help[7] = "Scroll Down: Decrease Speed";
+	help[8] = "Press X to Exit";
+	help[9] = "Press Enter to Restart";
 
 	string go[3]; //Text to display in game over state
 
@@ -327,7 +331,7 @@ int main(int argc, char *argv[])
 				SDL_RenderFillRect(ren,&r);
 
 				s1.render(ren,pfont,&pcol,surf,text,&pause,&p,pz);
-				for(int i=0;i<7;i++)
+				for(int i=0;i<9;i++)
 					s1.render(ren,hfont,&pcol,surf,text,&ht[i],&p,help[i].c_str());
 			}
 
@@ -350,7 +354,7 @@ int main(int argc, char *argv[])
 
 				s1.render(ren,hfont,&gocol,surf,text,&go2[2],&p,gosc); //Render Final Score
 
-				for(int i=6;i<8;i++) // Render the keypress prompts
+				for(int i=8;i<10;i++) // Render the keypress prompts
 					s1.render(ren,hfont,&gocol,surf,text,&ht[i],&p,help[i].c_str());
 			}
 
