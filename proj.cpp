@@ -21,7 +21,7 @@ public:
 	Snake();
 	void update(int d);
 	void render(SDL_Renderer *r);
-	void render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar, bool *p);
+	void render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, bool *p,char *s);
 	void renderf(SDL_Renderer *r);
 	int score();
 };
@@ -32,7 +32,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16; //sets the size of each cell
-	l=11; //sets the length
+	l=3; //sets the length
 
 	int x = ((rand() % SW)>>4)<<4; //generates a random location for the food
 	int y = ((rand() % SH)>>4)<<4;
@@ -149,19 +149,10 @@ void Snake::render(SDL_Renderer *r)
 	SDL_RenderFillRect(r,&s[0]); //render head of snake
 }
 
-void Snake::render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, SDL_Rect *bar, bool *p)
+void Snake::render(SDL_Renderer *r, TTF_Font *font, SDL_Color *col, SDL_Surface *surf, SDL_Texture *text, SDL_Rect *score, bool *p,char *s)
 {
-	char sc[15];
-
-	sprintf(sc,"Score: %d", l-3);
-
-	if(*p) sprintf(sc,"PAUSED");
-
-	surf = TTF_RenderText_Solid(font,sc,*col);
-	text = SDL_CreateTextureFromSurface(r,surf);
-
-	SDL_SetRenderDrawColor(r,0,127,0,255);
-	SDL_RenderFillRect(r,bar);
+	surf = TTF_RenderText_Solid(font,s,*col);
+	text = SDL_CreateTextureFromSurface(r,surf);	
 
 	SDL_RenderCopy(r,text,NULL,score);
 }
@@ -198,19 +189,25 @@ int main(int argc, char *argv[])
 	SDL_Event e; //Create an event to check inputs
 
 	int scw = 150, sch = 30; //Score rectangle widht and height
-	int pw = 200, ph = 80;
+	int pw = 300, ph = 80;
 	SDL_Rect r = {0,32,SW,SH-32}; //Screen size rectangle for dimming
-	SDL_Rect score = {SW/2-scw/2,4,scw,sch}; //Score rectangle
+	SDL_Rect score = {SW/2-scw/2,4,scw,sch}, score2 = {320,320,scw,sch}; //Score rectangle
 	SDL_Rect bar = {0,0,SW,32}; //Top bar
 	SDL_Rect pause = {SW/2-pw/2,(int)(0.33 * SH),pw,ph};
 
 	TTF_Font *font =  TTF_OpenFont("Minecrafter.Reg.ttf",14); //Load Font
 	if(font==NULL) {cout << "Font not found\n"; run = 0;} //Check if font is loaded or not
-	SDL_Color col = {80,80,80}; //Font color
+
+	TTF_Font *pfont = TTF_OpenFont("Minecrafter.Reg.ttf",24);
+	if(pfont==NULL) {cout << "Font not found\n"; run =0;}
+
+	SDL_Color scol = {80,80,80}, pcol = {200,200,200}; //Font color
 	SDL_Surface *surf; //Surface for the font to load to
 	SDL_Texture *text; //Texture for the previously created surface to use as base
+	
+	//Note: SDL is weird and doesn't allow you to directly load a font into a texture
 
-	//Note: SDL is weird and doesn't allow you to directly load a font into a texture 
+	char pz[] = "PAUSED";
 
 	while(run)
 	{
@@ -257,7 +254,14 @@ int main(int argc, char *argv[])
 
 		s1.render(ren); //Render snake, snake head and food
 
-		s1.render(ren,font,&col,surf,text,&score,&bar,&p);
+		SDL_SetRenderDrawColor(ren,0,180,150,255);
+		SDL_RenderFillRect(ren,&bar);
+
+		char sc[15];
+
+		sprintf(sc,"Score  %d", s1.score());
+
+		s1.render(ren,font,&scol,surf,text,&score,&p,sc); // Render Score Text
 
 		if(p) //if paused dim the screen
 		{
@@ -265,7 +269,7 @@ int main(int argc, char *argv[])
 			SDL_SetRenderDrawColor(ren,0,0,0,100);
 			SDL_RenderFillRect(ren,&r);
 
-			s1.render(ren,font,&col,surf,text,&pause,&bar,&p);
+			s1.render(ren,pfont,&pcol,surf,text,&pause,&p,pz);
 		}
 
 		if(fail)
