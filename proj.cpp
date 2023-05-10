@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int fail=0;
+int fail=0;// Fail flag or game over flag
 
 //For Windowed Operation
 // int SW = 640, SH = 640, w = 4,m = 0;
@@ -363,8 +363,8 @@ int main(int argc, char *argv[])
 			if(frame < 1000/fps) //if the amount of time taken to render is less than one frame, delay until one frame's worth of time has passed
 				SDL_Delay((1000/fps - frame) + del);
 		}
-		if(cont) continue;
-		if(!run) break;
+		if(cont) continue; // if cont is 1 skip the next line and start again
+		if(!run) break; //if run is 0 break out of the loop
 	}
 	SDL_DestroyTexture(text);
 	SDL_FreeSurface(surf);
