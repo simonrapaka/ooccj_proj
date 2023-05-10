@@ -32,7 +32,7 @@ Snake::Snake()
 		s[i] = {0,0,0,0};
 
 	size = 16; //sets the size of each cell
-	l=15; //sets the length
+	l=4; //sets the length
 
 	int x = ((rand() % SW)>>4)<<4; //generates a random location for the food
 	int y = ((rand() % SH)>>4)<<4;
