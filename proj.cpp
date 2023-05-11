@@ -14,7 +14,56 @@ int SW = 640, SH = 640, w = 4,m = 0;
 //For FullScreen Operation
 // int SW = 1280,SH = 720,w = 1,m = 1;
 
-class Lead
+class User
+{
+	char user[20], pass[20];
+	friend class Lead;
+	public:
+	User()
+	{
+		sprintf(user," ");
+		sprintf(pass," ");
+	}
+	User(char s[], char p[])
+	{
+		strcpy(user,s);
+		strcpy(pass,p);
+	}
+	void getuser()
+	{
+		string uname,pw;
+
+		while(true)
+		{
+			cout << "Enter Username: ";
+			cin >> uname;
+			if(uname.size() > 20) continue;
+			cout << "Enter Password: ";
+			cin >> pw;
+			if(pw.size() > 20) continue;
+
+			char uname2[20],pw2[20];
+
+			strcpy(user,uname.c_str());
+			strcpy(pass,pw.c_str());
+			break;
+		}
+	}
+	char* getuname()
+	{
+		return user;
+	}
+	char* getpass()
+	{
+		return pass;
+	}
+};
+
+User al[3] = {{"Name1","MITWPU"},
+				{"Username","Password"},
+				{"Simon","security"},};
+
+class Lead : public User
 {
 	private:
 	char n[20];
@@ -32,6 +81,12 @@ class Lead
 		sr = a;
 		sp = b;
 	}
+	Lead(User &u, int a, int b)
+	{
+		strcpy(n,u.getuname());
+		sr = a;
+		sp = b;
+	}
 	string getname()
 	{
 		return n;
@@ -43,6 +98,10 @@ class Lead
 	int getspeed()
 	{
 		return sp;
+	}
+	char* getpass()
+	{
+		return pass;
 	}
 };
 
@@ -243,17 +302,22 @@ int main(int argc, char *argv[])
 		ldb.close();
 	}
 
-	string name;
 	int n;
-	while(true)
-	{
-		cout << "Enter Name(max 6 characters): ";
-		
-		cin >> name;
-		if(name.size() > 6) cout << "Exceeded length\n";
-		else break;
-	}
+	User u;
 
+	u.getuser();
+
+	while(true)
+	{	
+		int p=0;
+		for(int i=0;i<3;i++)
+			if(strcmp(u.getuname(),al[i].getuname()) == 0)
+				if(strcmp(u.getpass(),al[i].getpass()) != 0)
+				{	
+					cout << "Invalid password";
+					p=1;
+				}
+	}
 	while(true)
 	{
 		cout << "\nEnter Speed(0 to 100): ";
@@ -263,7 +327,6 @@ int main(int argc, char *argv[])
 	}
 	
 	char nm[20];
-	strcpy(nm,name.c_str());
 
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,w); //Create Window with certain parameters
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED); //Create Renderer that points to the previously created window
@@ -357,7 +420,7 @@ int main(int argc, char *argv[])
 		int run = 1,fps = 60,dir = 1; // initialize with direction up and 0ms delay
 		int cont = 0;//continue flag
 		bool ld=false;
-		bool lup=false;
+		bool lup=false;//leaderboard update flag
 		bool p = false; //pause flag set to false
 
 		Snake s1; //Create Snake object
@@ -457,7 +520,7 @@ int main(int argc, char *argv[])
 
 				if(!lup)
 				{
-					Lead lt(nm,s1.score(),n);
+					Lead lt(u,s1.score(),n);
 
 					for(int i=0;i<10;i++)
 					{
