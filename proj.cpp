@@ -19,23 +19,43 @@ class Lead
 	private:
 	char n[20];
 	int sr,sp;
+
 	public:
 	Lead()
 	{
 		sprintf(n," ");
 		sr = sp = 0;
 	}
-	Lead(char s[],int a, int b)
+	Lead(char s[], int a, int b)
 	{
 		strcpy(n,s);
 		sr = a;
 		sp = b;
 	}
-	void print()
+	string getname()
 	{
-		cout << n << " Score: " << sr << " Speed: " << sp << "\n"; 
+		return n;
+	}
+	int getscore()
+	{
+		return sr;
+	}
+	int getspeed()
+	{
+		return sp;
 	}
 };
+
+bool comp(Lead *l1, Lead *l2)
+{
+	if(l1->getspeed() > l2->getspeed()) return true;
+	if(l2->getspeed() > l1->getspeed()) return false;
+
+	if(l1->getscore() > l2->getscore()) return true;
+	if(l2->getscore() > l1->getscore()) return false;
+
+	return false;
+}
 
 class Snake
 {
@@ -223,6 +243,28 @@ int main(int argc, char *argv[])
 		ldb.close();
 	}
 
+	string name;
+	int n;
+	while(true)
+	{
+		cout << "Enter Name(max 6 characters): ";
+		
+		cin >> name;
+		if(name.size() > 6) cout << "Exceeded length\n";
+		else break;
+	}
+
+	while(true)
+	{
+		cout << "\nEnter Speed(0 to 100): ";
+		cin >> n;
+		if(n<0 || n>100) cout << "Enter valid value\n";
+		else break;
+	}
+	
+	char nm[20];
+	strcpy(nm,name.c_str());
+
 	win = SDL_CreateWindow("Test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SW,SH,w); //Create Window with certain parameters
 	ren = SDL_CreateRenderer(win,-1,SDL_RENDERER_ACCELERATED); //Create Renderer that points to the previously created window
 
@@ -292,17 +334,34 @@ int main(int argc, char *argv[])
 
 	SDL_Color gocol = {200,200,200};
 
-	int runmain=1,del=0; //main run flag
+	SDL_Rect ldr[11];
+
+	ldr[0] = {SW/2-250,(int)(0.25 * SH),500,100};
+	ldr[1] = {SW/2-200,ldr[0].y + 120,400,30};
+
+	for(int i=2;i<11;i++)
+		ldr[i] = {SW/2-200,ldr[i-1].y + 30,400,30};
+
+	string ldr2[11];
+
+	ldr2[0] = "Leaderboard";
+
+	int runmain=1,del=(n*2 - 200)*(-1); //main run flag
+
+	SDL_Rect ldr4 = {SW/2-250,ht[6].y - 30,500,30};
+
+	string ldr3 = "Press L to view leaderboard";
 
 	while(runmain)
 	{
 		int run = 1,fps = 60,dir = 1; // initialize with direction up and 0ms delay
 		int cont = 0;//continue flag
+		bool ld=false;
+		bool lup=false;
 		bool p = false; //pause flag set to false
 
 		Snake s1; //Create Snake object
 		SDL_Event e; //Create an event to check inputs
-
 
 		while(run)
 		{
@@ -335,17 +394,20 @@ int main(int argc, char *argv[])
 
 					if(e.key.keysym.scancode == SDL_SCANCODE_RETURN)// If enter is pressed during fail(game over) state, set cont to 1
 						if(fail) {fail=0;cont=1;}
+
+					if(e.key.keysym.scancode == SDL_SCANCODE_L)
+						if(fail) ld= !ld;
 				}
 				
-				if(e.type == SDL_MOUSEWHEEL)
-				{
-					if(e.wheel.y < 0) //if scroll wheel is scrolled down increase the delay after rendering each frame slowin down the game
-						if(del+2<=200)
-							del+=2;
-					if(e.wheel.y > 0) //if scroll wheel is scrolled up decrease the delay, speeding up the game
-						if(del-2 >= 0)
-							del-=2;
-				}
+				// if(e.type == SDL_MOUSEWHEEL)
+				// {
+				// 	if(e.wheel.y < 0) //if scroll wheel is scrolled down increase the delay after rendering each frame slowin down the game
+				// 		if(del+2<=200)
+				// 			del+=2;
+				// 	if(e.wheel.y > 0) //if scroll wheel is scrolled up decrease the delay, speeding up the game
+				// 		if(del-2 >= 0)
+				// 			del-=2;
+				// }
 			}
 			if(!run) break;//break out of the inner loop
 			if(cont) {run=0;continue;}// go to the end of the inner loop if cont is 1
@@ -393,17 +455,51 @@ int main(int argc, char *argv[])
 				SDL_SetRenderDrawColor(ren,120,0,0,100);
 				SDL_RenderFillRect(ren,&r);
 
-				for(int i=0;i<2;i++) // Render Game Over Text
-					s1.render(ren,pfont,&gocol,surf,text,&go2[i],&p,go[i].c_str());
+				if(!lup)
+				{
+					Lead lt(nm,s1.score(),n);
 
-				char gosc[20];
+					for(int i=0;i<10;i++)
+					{
+						if(comp(&lt,&l[i]))
+						{
+							for(int j=9;j>i;j--)
+								l[j] = l[j-1];
+							l[i] = lt;
+							break;
+						}
+					}
 
-				sprintf(gosc,"Final Score: %d", s1.score());
+					for(int i=1;i<11;i++)
+					{
+						char buff[100];
+						sprintf(buff," %d. Name: %s Score: %d Speed: %d", i,l[i-1].getname().c_str(),l[i-1].getscore(),l[i-1].getspeed());
+						ldr2[i] = buff;
+					}
+					lup = true;
+				}	
 
-				s1.render(ren,hfont,&gocol,surf,text,&go2[2],&p,gosc); //Render Final Score
+				if(!ld)
+				{
+					for(int i=0;i<2;i++) // Render Game Over Text
+						s1.render(ren,pfont,&gocol,surf,text,&go2[i],&p,go[i].c_str());
 
-				for(int i=6;i<8;i++) // Render the keypress prompts
-					s1.render(ren,hfont,&gocol,surf,text,&ht[i],&p,help[i].c_str());
+					char gosc[20];
+
+					sprintf(gosc,"Final Score: %d", s1.score());
+
+					s1.render(ren,hfont,&gocol,surf,text,&go2[2],&p,gosc); //Render Final Score
+
+					for(int i=6;i<8;i++) // Render the keypress prompts
+						s1.render(ren,hfont,&gocol,surf,text,&ht[i],&p,help[i].c_str());
+
+					s1.render(ren,hfont,&gocol,surf,text,&ldr4,&p,ldr3.c_str());
+				}
+				else
+				{
+					for(int i=0;i<11;i++)
+						s1.render(ren,hfont,&gocol,surf,text,&ldr[i],&p,ldr2[i].c_str());
+				}
 			}
 
 			SDL_RenderPresent(ren); //Actual point in the program where the screen is updated
@@ -418,10 +514,19 @@ int main(int argc, char *argv[])
 		if(cont) continue; // if cont is 1 skip the next line and start again
 		if(!run) break; //if run is 0 break out of the loop
 	}
+	TTF_CloseFont(font);
+	TTF_CloseFont(pfont);
+	TTF_CloseFont(hfont);
+	TTF_Quit();
 	SDL_DestroyTexture(text);//Deallocate texture memory
 	SDL_FreeSurface(surf); //Deallocate surface memory
 	SDL_DestroyRenderer(ren); //Stop Renderer
-	SDL_DestroyWindow(win); //Clos Window
+	SDL_DestroyWindow(win); //Close Window
+
+	oldb.open("lead.ldb");
+	for(int i=0;i<10;i++)
+			oldb.write((char*)&l[i],sizeof(Lead));
+	oldb.close();
 
 	return 0;
 }
