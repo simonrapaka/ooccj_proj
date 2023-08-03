@@ -1,4 +1,7 @@
 # ooccj_proj
+
+A simple Snake game made with SDL and C++
+
 For compiling on windows systems
 `g++ proj.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf`
 
